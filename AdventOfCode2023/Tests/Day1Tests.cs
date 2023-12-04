@@ -3,10 +3,10 @@ using FluentAssertions;
 
 namespace Tests;
 
-public class UnitTests
+public class Day1Tests
 {
     [Fact]
-    public void Day1_Part1ex()
+    public void Part1Ex()
     {
         var day = nameof(Day1);
         var fileLocation = $"./Files/{day}_ex.txt";
@@ -15,7 +15,7 @@ public class UnitTests
     }
 
     [Fact]
-    public void Day1_Part1()
+    public void Part1()
     {
         var day = nameof(Day1);
         var fileLocation = $"./Files/{day}.txt";
@@ -24,7 +24,7 @@ public class UnitTests
     }
 
     [Fact]
-    public void Day1_Part2ex2()
+    public void Part2Ex2()
     {
         var day = nameof(Day1);
         var fileLocation = $"./Files/{day}_ex2.txt";
@@ -33,7 +33,7 @@ public class UnitTests
     }
     
     [Fact]
-    public void Day1_Part2()
+    public void Part2()
     {
         var day = nameof(Day1);
         var fileLocation = $"./Files/{day}.txt";
