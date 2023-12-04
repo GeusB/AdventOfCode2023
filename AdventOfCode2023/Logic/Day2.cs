@@ -1,104 +1,112 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 
-namespace AdventOfCode2023
+namespace AdventOfCode2023;
+
+public static class Day2
 {
-    public static class Day2
+    private const string Day = "2";
+
+    public static void Execute()
     {
-        private const string Day = "2";
+        const string exampleLocation = $"./Files/Day{Day}_ex.txt";
+        const string fileLocation = $"./Files/Day{Day}.txt";
 
-        public static void Execute()
-        {
-            const string exampleLocation = $"./Files/Day{Day}_ex.txt";
-            const string fileLocation = $"./Files/Day{Day}.txt";
+        Console.WriteLine(Part1(exampleLocation));
+        Console.WriteLine(Part1(fileLocation));
 
-            Console.WriteLine(Part1(exampleLocation));
-            Console.WriteLine(Part1(fileLocation));
-
-            Console.WriteLine(Part2(exampleLocation));
-            Console.WriteLine(Part2(fileLocation));
-        }
-
-        public static int Part2(string fileLocation)
-        {
-            var inputList = Tools.ReadListFromFile(GetGame, fileLocation);
-            var result = inputList.Sum(y => y.GetPower());
-            return result;
-        }
-
-
-        public static int Part1(string fileLocation)
-        {
-            var inputList = Tools.ReadListFromFile(GetGame, fileLocation);
-            var result = inputList.Where(x => x.IsValid(12, 13, 14)).Sum(y => y.Id);
-            return result;
-        }
-
-        private static Game GetGame(string line)
-        {
-            return new Game(line);
-        }
+        Console.WriteLine(Part2(exampleLocation));
+        Console.WriteLine(Part2(fileLocation));
     }
 
-    class Game
+    public static int Part2(string fileLocation)
     {
-        public int Id { get; }
-        private string RawGame { get; }
-        private List<Set> Sets { get; set; }
-        public bool IsValid(int maxRed, int maxGreen, int maxBlue) => Sets.All(r => r.IsValid(maxRed, maxGreen, maxBlue));
-        private int Power() => MinRed * MinGreen * MinBlue;
-        private int MinRed { get; set; }
-        private int MinGreen { get; set; }
-        private int MinBlue { get; set; }
-        
-        public Game(string rawGame)
-        {
-            RawGame = rawGame;
-            var split = RawGame.Split(':');
-            Id = int.Parse(split.First().Split(' ').Last());
-            Sets = split.Last().Split(';').Select(x => new Set(x)).ToList();
-        }
-
-        public int GetPower()
-        {
-            MinRed = Sets.Max(x => x.Red);
-            MinGreen = Sets.Max(x => x.Green);
-            MinBlue = Sets.Max(x => x.Blue);
-            
-            return Power();
-        }
+        var inputList = Tools.ReadListFromFile(GetGame, fileLocation);
+        var result = inputList.Sum(y => y.GetPower());
+        return result;
     }
 
-    class Set
+
+    public static int Part1(string fileLocation)
     {
-        public int Red { get; }
-        public int Green { get; }
-        public int Blue { get; }
+        var inputList = Tools.ReadListFromFile(GetGame, fileLocation);
+        var result = inputList.Where(x => x.IsValid(12, 13, 14)).Sum(y => y.Id);
+        return result;
+    }
 
-        public bool IsValid(int maxRed, int maxGreen, int maxBlue) => Red <= maxRed && Green <= maxGreen && Blue <= maxBlue;
+    private static Game GetGame(string line)
+    {
+        return new Game(line);
+    }
+}
 
+internal class Game
+{
+    public Game(string rawGame)
+    {
+        RawGame = rawGame;
+        var split = RawGame.Split(':');
+        Id = int.Parse(split.First().Split(' ').Last());
+        Sets = split.Last().Split(';').Select(x => new Set(x)).ToList();
+    }
 
-        public Set(string rawRoundString)
+    public int Id { get; }
+    private string RawGame { get; }
+    private List<Set> Sets { get; }
+    private int MinRed { get; set; }
+    private int MinGreen { get; set; }
+    private int MinBlue { get; set; }
+
+    public bool IsValid(int maxRed, int maxGreen, int maxBlue)
+    {
+        return Sets.All(r => r.IsValid(maxRed, maxGreen, maxBlue));
+    }
+
+    private int Power()
+    {
+        return MinRed * MinGreen * MinBlue;
+    }
+
+    public int GetPower()
+    {
+        MinRed = Sets.Max(x => x.Red);
+        MinGreen = Sets.Max(x => x.Green);
+        MinBlue = Sets.Max(x => x.Blue);
+
+        return Power();
+    }
+}
+
+internal class Set
+{
+    public Set(string rawRoundString)
+    {
+        var draws = rawRoundString.Split(',');
+        foreach (var draw in draws)
         {
-            var draws = rawRoundString.Split(',');
-            foreach (var draw in draws)
+            var drawSplit = draw.TrimStart().Split(' ');
+            switch (drawSplit.Last())
             {
-                var drawSplit = draw.TrimStart().Split(' ');
-                switch (drawSplit.Last())
-                {
-                    case "red":
-                        Red = int.Parse(drawSplit.First());
-                        break;
-                    case "green":
-                        Green = int.Parse(drawSplit.First());
-                        break;
-                    case "blue":
-                        Blue = int.Parse(drawSplit.First());
-                        break;
-                }
+                case "red":
+                    Red = int.Parse(drawSplit.First());
+                    break;
+                case "green":
+                    Green = int.Parse(drawSplit.First());
+                    break;
+                case "blue":
+                    Blue = int.Parse(drawSplit.First());
+                    break;
             }
         }
+    }
+
+    public int Red { get; }
+    public int Green { get; }
+    public int Blue { get; }
+
+    public bool IsValid(int maxRed, int maxGreen, int maxBlue)
+    {
+        return Red <= maxRed && Green <= maxGreen && Blue <= maxBlue;
     }
 }

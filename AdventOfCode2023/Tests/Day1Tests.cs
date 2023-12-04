@@ -31,14 +31,13 @@ public class Day1Tests
 
         Day1.Part2(fileLocation).Should().Be(281);
     }
-    
+
     [Fact]
     public void Part2()
     {
         var day = nameof(Day1);
         var fileLocation = $"./Files/{day}.txt";
 
-        Day1.Part2(fileLocation).Should().Be(53348); }
-
-    
+        Day1.Part2(fileLocation).Should().Be(53348);
+    }
 }
