@@ -38,7 +38,7 @@ public class UnitTests
         var day = nameof(Day1);
         var fileLocation = $"./Files/{day}.txt";
 
-        Day1.Part2(fileLocation).Should().Be(54644); }
+        Day1.Part2(fileLocation).Should().Be(53348); }
 
     
 }

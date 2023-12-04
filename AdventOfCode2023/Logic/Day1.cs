@@ -129,18 +129,58 @@ namespace AdventOfCode2023
             return numbers.First() * 10 + numbers.Last();
         }
 
-        private static int GetLineInt(string line)
+        private static int GetLineIntA2(string line)
         {
-            var numbers = NewMethod(line, new List<int>());
+            var numbers = RecursiveNonsense(line, new List<int>());
 
             var lineInt = numbers.First() * 10 + numbers.Last();
             return lineInt;
         }
 
-        private static List<int> NewMethod(string line, List<int> numbers)
+        private static int GetLineInt(string line)
+        {
+            var first = 0;
+            var last = 0;
+            var firstEnd = false;
+            var lastEnd = false;
+            for (var i = 1; i <= line.Length; i++)
+            {
+                if (firstEnd) break;
+                var possibleMatch = line.Substring(0, i);
+                foreach (var pair in _numbers2)
+                {
+                    if (possibleMatch.Contains(pair.Key))
+                    {
+                        first = pair.Value;
+                        firstEnd = true;
+                        break;
+                    }
+                }
+            }
+
+            for (var i = 1; i <= line.Length; i++)
+            {
+                if (lastEnd) break;
+                var possibleMatch = line.Substring(line.Length - i, i);
+                foreach (var pair in _numbers2)
+                {
+                    if (possibleMatch.Contains(pair.Key))
+                    {
+                        last = pair.Value;
+                        lastEnd = true;
+                        break;
+                    }
+                }
+            }
+
+            var lineInt = first * 10 + last;
+            return lineInt;
+        }
+
+        private static List<int> RecursiveNonsense(string line, List<int> numbers)
         {
             var end = false;
-            if (line == "") 
+            if (line == "")
                 return numbers;
             for (var i = 1; i <= line.Length; i++)
             {
@@ -151,7 +191,7 @@ namespace AdventOfCode2023
                 {
                     numbers.Add(_numbers2[possibleMatch]);
                     var substring = line.Substring(i, line.Length - i);
-                    NewMethod(substring, numbers);
+                    RecursiveNonsense(substring, numbers);
                     break;
                 }
 
@@ -161,7 +201,7 @@ namespace AdventOfCode2023
                     {
                         numbers.Add(pair.Value);
                         var substring = line.Substring(i, line.Length - i);
-                        NewMethod(substring, numbers);
+                        RecursiveNonsense(substring, numbers);
                         end = true;
                         break;
                     }
