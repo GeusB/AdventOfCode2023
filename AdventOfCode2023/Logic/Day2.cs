@@ -23,60 +23,64 @@ namespace AdventOfCode2023
 
         public static int Part2(string fileLocation)
         {
-            return 0;
+            var inputList = Tools.ReadListFromFile(GetGame, fileLocation);
+            var result = inputList.Sum(y => y.GetPower());
+            return result;
         }
 
 
         public static int Part1(string fileLocation)
         {
-            
-            var inputList = Tools.ReadListFromFile(x=> GetGame(x,12,13,14), fileLocation);
-            var result = inputList.Where(x => x.IsValid()).Sum(y => y.Id);
+            var inputList = Tools.ReadListFromFile(GetGame, fileLocation);
+            var result = inputList.Where(x => x.IsValid(12, 13, 14)).Sum(y => y.Id);
             return result;
         }
-        
-        private static Game GetGame(string line,int maxRed, int maxGreen, int maxBlue)
+
+        private static Game GetGame(string line)
         {
-            return new Game(maxRed, maxGreen, maxBlue, line);
+            return new Game(line);
         }
     }
 
     class Game
     {
-        public int Id { get; set; }
-        private int MaxRed { get; set; }
-        private int MaxGreen { get; set; }
-        private int MaxBlue { get; set; }
-        private string RawGame { get; set; }
+        public int Id { get; }
+        private string RawGame { get; }
+        private List<Set> Sets { get; set; }
+        public bool IsValid(int maxRed, int maxGreen, int maxBlue) => Sets.All(r => r.IsValid(maxRed, maxGreen, maxBlue));
+        private int Power() => MinRed * MinGreen * MinBlue;
+        private int MinRed { get; set; }
+        private int MinGreen { get; set; }
+        private int MinBlue { get; set; }
         
-        public List<Round> Rounds { get; set; }
-
-        public bool IsValid() => Rounds.All(r => r.IsValid);
-        
-        public Game(int maxRed, int maxGreen, int maxBlue, string rawGame)
+        public Game(string rawGame)
         {
-            MaxRed = maxRed;
-            MaxGreen = maxGreen;
-            MaxBlue = maxBlue;
             RawGame = rawGame;
             var split = RawGame.Split(':');
             Id = int.Parse(split.First().Split(' ').Last());
-            Rounds = split.Last().Split(';').Select(x => new Round(x, MaxRed, MaxGreen, MaxBlue)).ToList();
+            Sets = split.Last().Split(';').Select(x => new Set(x)).ToList();
+        }
+
+        public int GetPower()
+        {
+            MinRed = Sets.Max(x => x.Red);
+            MinGreen = Sets.Max(x => x.Green);
+            MinBlue = Sets.Max(x => x.Blue);
+            
+            return Power();
         }
     }
 
-    class Round
+    class Set
     {
-        private int Red { get; set; }
-        private int Green { get; set; }
-        private int Blue { get; set; }
+        public int Red { get; }
+        public int Green { get; }
+        public int Blue { get; }
 
-        public bool IsValid { get; set; }
-        
-        public bool GetIsValid(int maxRed, int maxGreen, int maxBlue) => Red <= maxRed && Green <= maxGreen && Blue <= maxBlue;
-        
-        
-        public Round(string rawRoundString, int maxRed, int maxGreen, int maxBlue)
+        public bool IsValid(int maxRed, int maxGreen, int maxBlue) => Red <= maxRed && Green <= maxGreen && Blue <= maxBlue;
+
+
+        public Set(string rawRoundString)
         {
             var draws = rawRoundString.Split(',');
             foreach (var draw in draws)
@@ -84,16 +88,17 @@ namespace AdventOfCode2023
                 var drawSplit = draw.TrimStart().Split(' ');
                 switch (drawSplit.Last())
                 {
-                    case "red": Red = int.Parse(drawSplit.First());
+                    case "red":
+                        Red = int.Parse(drawSplit.First());
                         break;
-                    case "green": Green = int.Parse(drawSplit.First());
+                    case "green":
+                        Green = int.Parse(drawSplit.First());
                         break;
-                    case "blue": Blue = int.Parse(drawSplit.First());
+                    case "blue":
+                        Blue = int.Parse(drawSplit.First());
                         break;
-                    
                 }
             }
-            IsValid = Red <= maxRed && Green <= maxGreen && Blue <= maxBlue;
         }
     }
 }

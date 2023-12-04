@@ -22,11 +22,11 @@ public class Day2Tests
     }
 
     [Fact]
-    public void Part2Ex2()
+    public void Part2Ex()
     {
         var fileLocation = $"./Files/Day2_ex.txt";
 
-        Day2.Part2(fileLocation).Should().Be(281);
+        Day2.Part2(fileLocation).Should().Be(2286);
     }
     
     [Fact]
@@ -34,7 +34,7 @@ public class Day2Tests
     {
         var fileLocation = $"./Files/Day2.txt";
 
-        Day2.Part2(fileLocation).Should().Be(53348); }
+        Day2.Part2(fileLocation).Should().Be(71036); }
 
     
 }
