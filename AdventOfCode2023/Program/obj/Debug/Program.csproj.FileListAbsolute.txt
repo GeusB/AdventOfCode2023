@@ -1,0 +1,12 @@
+C:\Repos\AdventOfCode2023\AdventOfCode2023\Program\bin\Debug\Program.exe
+C:\Repos\AdventOfCode2023\AdventOfCode2023\Program\bin\Debug\Program.pdb
+C:\Repos\AdventOfCode2023\AdventOfCode2023\Program\obj\Debug\Program.csproj.AssemblyReference.cache
+C:\Repos\AdventOfCode2023\AdventOfCode2023\Program\obj\Debug\Program.csproj.CoreCompileInputs.cache
+C:\Repos\AdventOfCode2023\AdventOfCode2023\Program\obj\Debug\Program.exe
+C:\Repos\AdventOfCode2023\AdventOfCode2023\Program\obj\Debug\Program.pdb
+C:\Repos\AdventOfCode2023\AdventOfCode2023\Program\bin\Debug\Logic.dll
+C:\Repos\AdventOfCode2023\AdventOfCode2023\Program\bin\Debug\Logic.pdb
+C:\Repos\AdventOfCode2023\AdventOfCode2023\Program\obj\Debug\Program.csproj.CopyComplete
+C:\Repos\AdventOfCode2023\AdventOfCode2023\Program\bin\Debug\Files\Day1.txt
+C:\Repos\AdventOfCode2023\AdventOfCode2023\Program\bin\Debug\Files\Day1_ex.txt
+C:\Repos\AdventOfCode2023\AdventOfCode2023\Program\bin\Debug\Files\Day1_ex2.txt
