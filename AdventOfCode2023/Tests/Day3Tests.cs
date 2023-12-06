@@ -18,7 +18,7 @@ public class Day3Tests
     {
         var fileLocation = "./Files/Day3.txt";
 
-        Day3.Part1(fileLocation).Should().Be(2204);
+        Day3.Part1(fileLocation).Should().Be(527364);
     }
 
     [Fact]
@@ -26,7 +26,7 @@ public class Day3Tests
     {
         var fileLocation = "./Files/Day3_ex.txt";
 
-        Day3.Part2(fileLocation).Should().Be(2286);
+        Day3.Part2(fileLocation).Should().Be(467835);
     }
 
     [Fact]
@@ -34,6 +34,6 @@ public class Day3Tests
     {
         var fileLocation = "./Files/Day3.txt";
 
-        Day3.Part2(fileLocation).Should().Be(71036);
+        Day3.Part2(fileLocation).Should().Be(79026871);
     }
 }
