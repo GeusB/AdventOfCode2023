@@ -25,7 +25,20 @@ public static class Day4
     public static int Part2(string fileLocation)
     {
         var inputList = Tools.ReadListFromFile(GetGame, fileLocation);
-        return inputList.Sum(x => x.Points);
+
+
+        foreach (var card in inputList)
+        {
+            if (card.WinnerCount == 0) continue;
+
+            for (var w = 1; w <= card.WinnerCount; w++)
+            {
+                var cardToUpdate = inputList.Single(x => x.Number == card.Number + w);
+                cardToUpdate.Add(card.Count);
+            }
+        }
+
+        return inputList.Sum(x => x.Count);
     }
 
     private static Card GetGame(string line)
@@ -42,15 +55,18 @@ public static class Day4
     private class Card
     {
         private string RawValue { get; }
-        private int Number { get; set; }
+        public int Number { get; set; }
         private List<int> WinningNumbers { get; set; }
         private List<int> YourNumbers { get; set; }
-        public int Points { get; set; }
+        public int Points { get; private set; }
+        public int WinnerCount { get; private set; }
+        public int Count { get; private set; }
 
         public Card(string rawValue)
         {
             RawValue = rawValue;
             Parse();
+            Count = 1;
         }
 
         private void Parse()
@@ -58,10 +74,13 @@ public static class Day4
             var cardSplit = RawValue.Split(':');
             Number = int.Parse(cardSplit.First().Split(' ').Last());
             var numbers = cardSplit.Last().Split('|');
-            WinningNumbers = numbers.First().Trim().Split(' ').Where(x=>x != "").Select(int.Parse).ToList();
-            YourNumbers = numbers.Last().Trim().Split(' ').Where(x=>x != "").Select(int.Parse).ToList();
+            WinningNumbers = numbers.First().Trim().Split(' ').Where(x => x != "").Select(int.Parse).ToList();
+            YourNumbers = numbers.Last().Trim().Split(' ').Where(x => x != "").Select(int.Parse).ToList();
             var winners = YourNumbers.Where(x => WinningNumbers.Any(y => y == x));
-            Points = (int)Math.Pow(2, winners.Count() - 1);
+            WinnerCount = winners.Count();
+            Points = (int)Math.Pow(2, WinnerCount - 1);
         }
+
+        public void Add(int count) => Count+= count;
     }
 }
