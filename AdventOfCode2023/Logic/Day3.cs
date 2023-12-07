@@ -63,7 +63,7 @@ public static class Day3
             foreach (var numberPosition in line.NumberPositions)
             {
                 if (line.SymbolPositions.Any(sp =>
-                    sp.Position - 1 == numberPosition.End || sp.Position + 1 == numberPosition.Start))
+                        sp.Position - 1 == numberPosition.End || sp.Position + 1 == numberPosition.Start))
                 {
                     numberPosition.SetAdjacentTrue();
                 }
@@ -74,7 +74,7 @@ public static class Day3
                 foreach (var numberPosition in line.NumberPositions.Where(x => !x.IsAdjacent))
                 {
                     if (previousLine.SymbolPositions.Any(sp =>
-                        sp.Position >= numberPosition.Start - 1 && sp.Position <= numberPosition.End + 1))
+                            sp.Position >= numberPosition.Start - 1 && sp.Position <= numberPosition.End + 1))
                     {
                         numberPosition.SetAdjacentTrue();
                     }
@@ -86,7 +86,7 @@ public static class Day3
                 foreach (var numberPosition in line.NumberPositions.Where(x => !x.IsAdjacent))
                 {
                     if (nextLine.SymbolPositions.Any(sp =>
-                        sp.Position >= numberPosition.Start - 1 && sp.Position <= numberPosition.End + 1))
+                            sp.Position >= numberPosition.Start - 1 && sp.Position <= numberPosition.End + 1))
                     {
                         numberPosition.SetAdjacentTrue();
                     }
@@ -96,103 +96,106 @@ public static class Day3
 
         return lines.Sum(x => x.GetTotalValue());
     }
-}
 
 
-internal class Line
-{
-    public Line(int number, string rawLine)
+    private class Line
     {
-        Number = number;
-        RawLine = rawLine;
-        NumberPositions = new List<NumberPosition>();
-        SymbolPositions = new List<SymbolPosition>();
-        Parse();
-    }
-
-    public int Number { get; }
-    private string RawLine { get; }
-    public List<NumberPosition> NumberPositions { get; }
-    public List<SymbolPosition> SymbolPositions { get; }
-
-    public bool HasGears() => SymbolPositions.Any(x => x.IsGear());
-    public List<SymbolPosition> GetGears() => SymbolPositions.Where(x => x.IsGear()).ToList();
-    public int GetTotalGearRatio() => SymbolPositions.Select(y => y.GearRatio()).Sum();
-    public int GetTotalValue() => NumberPositions.Where(x => x.IsAdjacent).Sum(y => y.Value);
-
-    private void Parse()
-    {
-        var rawNumber = "";
-        var i = 0;
-        foreach (var ch in RawLine)
+        public Line(int number, string rawLine)
         {
-            if (char.IsDigit(ch))
-                rawNumber += ch;
-            else
+            Number = number;
+            RawLine = rawLine;
+            NumberPositions = new List<NumberPosition>();
+            SymbolPositions = new List<SymbolPosition>();
+            Parse();
+        }
+
+        public int Number { get; }
+        private string RawLine { get; }
+        public List<NumberPosition> NumberPositions { get; }
+        public List<SymbolPosition> SymbolPositions { get; }
+
+        public bool HasGears() => SymbolPositions.Any(x => x.IsGear());
+        public List<SymbolPosition> GetGears() => SymbolPositions.Where(x => x.IsGear()).ToList();
+        public int GetTotalGearRatio() => SymbolPositions.Select(y => y.GearRatio()).Sum();
+        public int GetTotalValue() => NumberPositions.Where(x => x.IsAdjacent).Sum(y => y.Value);
+
+        private void Parse()
+        {
+            var rawNumber = "";
+            var i = 0;
+            foreach (var ch in RawLine)
             {
-                if (rawNumber != "")
+                if (char.IsDigit(ch))
+                    rawNumber += ch;
+                else
                 {
-                    NumberPositions.Add(new NumberPosition(i - rawNumber.Length, i - 1, int.Parse(rawNumber)));
-                    rawNumber = "";
+                    if (rawNumber != "")
+                    {
+                        NumberPositions.Add(new NumberPosition(i - rawNumber.Length, i - 1, int.Parse(rawNumber)));
+                        rawNumber = "";
+                    }
+
+                    if (ch != '.')
+                        SymbolPositions.Add(new SymbolPosition(ch, i));
                 }
-                if (ch != '.')
-                    SymbolPositions.Add(new SymbolPosition(ch, i));
+
+                i++;
             }
-            i++;
+
+            if (rawNumber != "")
+            {
+                NumberPositions.Add(new NumberPosition(i - rawNumber.Length, i - 1, int.Parse(rawNumber)));
+            }
         }
-        if (rawNumber != "")
+    }
+
+    private class NumberPosition
+    {
+        public NumberPosition(int start, int end, int value)
         {
-            NumberPositions.Add(new NumberPosition(i - rawNumber.Length, i - 1, int.Parse(rawNumber)));
+            Start = start;
+            End = end;
+            Value = value;
+            IsAdjacent = false;
         }
-    }
-}
 
-internal class NumberPosition
-{
-    public NumberPosition(int start, int end, int value)
-    {
-        Start = start;
-        End = end;
-        Value = value;
-        IsAdjacent = false;
+        public bool IsAdjacent { get; private set; }
+        public int Start { get; }
+        public int End { get; }
+        public int Value { get; }
+        public void SetAdjacentTrue() => IsAdjacent = true;
     }
 
-    public bool IsAdjacent { get; private set; }
-    public int Start { get; }
-    public int End { get; }
-    public int Value { get; }
-    public void SetAdjacentTrue() => IsAdjacent = true;
-}
-
-internal class SymbolPosition
-{
-    private char Symbol { get; }
-    public int Position { get; }
-    private List<int> PartNumbers { get; }
-    public bool IsGear() => Symbol == '*';
-    private bool IsValidGear() => IsGear() && PartNumbers.Count == 2;
-    public int GearRatio() => IsValidGear() ? PartNumbers.First() * PartNumbers.Last() : 0;
-    private void AddNumbers(IEnumerable<int> numbers) => PartNumbers.AddRange(numbers);
-
-    public void AddPartNumbersOtherLine(Line otherLine)
+    private class SymbolPosition
     {
-        if (otherLine == null) return;
-        AddNumbers(otherLine.NumberPositions
-            .Where(np => np.Start - 1 <= Position && np.End + 1 >= Position)
-            .Select(y => y.Value).ToList());
-    }
+        private char Symbol { get; }
+        public int Position { get; }
+        private List<int> PartNumbers { get; }
+        public bool IsGear() => Symbol == '*';
+        private bool IsValidGear() => IsGear() && PartNumbers.Count == 2;
+        public int GearRatio() => IsValidGear() ? PartNumbers.First() * PartNumbers.Last() : 0;
+        private void AddNumbers(IEnumerable<int> numbers) => PartNumbers.AddRange(numbers);
 
-    public void AddPartNumbersSameLine(Line sameLine)
-    {
-        AddNumbers(sameLine.NumberPositions
-            .Where(sp => sp.Start == Position + 1 || sp.End == Position - 1)
-            .Select(y => y.Value).ToList());
-    }
+        public void AddPartNumbersOtherLine(Line otherLine)
+        {
+            if (otherLine == null) return;
+            AddNumbers(otherLine.NumberPositions
+                .Where(np => np.Start - 1 <= Position && np.End + 1 >= Position)
+                .Select(y => y.Value).ToList());
+        }
 
-    public SymbolPosition(char symbol, int position)
-    {
-        Symbol = symbol;
-        Position = position;
-        PartNumbers = new List<int>();
+        public void AddPartNumbersSameLine(Line sameLine)
+        {
+            AddNumbers(sameLine.NumberPositions
+                .Where(sp => sp.Start == Position + 1 || sp.End == Position - 1)
+                .Select(y => y.Value).ToList());
+        }
+
+        public SymbolPosition(char symbol, int position)
+        {
+            Symbol = symbol;
+            Position = position;
+            PartNumbers = new List<int>();
+        }
     }
 }
