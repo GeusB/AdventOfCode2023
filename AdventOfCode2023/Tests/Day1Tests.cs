@@ -9,7 +9,7 @@ public class Day1Tests
     public void Part1Ex()
     {
         var day = nameof(Day1);
-        var fileLocation = $"./Files/{day}_ex.txt";
+        var fileLocation = $"Files/{day}_ex.txt";
 
         Day1.Part1(fileLocation).Should().Be(142);
     }
